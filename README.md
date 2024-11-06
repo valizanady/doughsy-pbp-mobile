@@ -51,6 +51,13 @@ Kelas : PBP B
 ### 3. Apa fungsi dari `setState()?` Jelaskan variabel apa saja yang dapat terdampak dengan fungsi tersebut.
 **setState()** adalah fungsi dalam Stateful widgets yang digunakan untuk memperbarui state. Ketika `setState()` dipanggil, Flutter akan merender ulang widget yang menggunakan state yang berubah. Variabel yang berada dalam kelas Stateful yang mempengaruhi UI dapat diperbarui dengan `setState()`.
 
+Variabel yang terdampak oleh `setState()`
+Variabel yang berada dalam objek `State` dari `StatefulWidget` dan memengaruhi UI akan terdampak ketika `setState()` dipanggil. Variabel ini termasuk:
+1. **Variabel yang Menyimpan Data UI**: Misalnya, variabel untuk teks, warna, atau ikon yang ditampilkan di layar.
+2. **Variabel Kontrol untuk Tampilan atau Perilaku**: Contohnya, variabel seperti `isLoading` untuk menunjukkan status loading, `selectedIndex` untuk tab atau item yang dipilih, atau `counter` dalam aplikasi counter.
+3. **Data yang Diambil Secara Dinamis**: Misalnya, data dari API yang kemudian disimpan dalam variabel state dan ditampilkan di UI.
+
+
 ### 4. Jelaskan perbedaan antara `const` dengan `final`.
 - **const**: Digunakan untuk mendefinisikan nilai konstan yang sudah diketahui pada waktu kompilasi. Nilai ini harus diinisialisasi saat deklarasi dan tidak dapat diubah.
 
