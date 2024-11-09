@@ -6,6 +6,9 @@ NPM : 2306240156
 
 Kelas : PBP B
 
+- [Tugas 7](#tugas-7)
+- [Tugas 8](#tugas-8)
+
 ## Tugas Individu 7 <a id="tugas-7"></a>
 
 ### 1. Jelaskan apa yang dimaksud dengan stateless widget dan stateful widget, dan jelaskan perbedaan dari keduanya.
@@ -111,3 +114,149 @@ onTap: () {
 
 4. Menjalankan Aplikasi
 - Setelah implementasi selesai, mjalankan aplikasi menggunakan command `flutter run`
+
+## Tugas Individu 8 <a id="tugas-8"></a>
+
+### 1. Apa kegunaan `const` di Flutter? Jelaskan apa keuntungan ketika menggunakan `const` pada kode Flutter. Kapan sebaiknya kita menggunakan `const`, dan kapan sebaiknya tidak digunakan?
+
+Kegunaan `const` di Flutter adalah untuk mendefinisikan objek yang bersifat tetap (immutable) dan diinisialisasi pada saat kompilasi. Dengan kata lain, `const` memungkinkan Flutter untuk mengoptimalkan penggunaan memori dengan menghindari pembuatan ulang objek yang sama. 
+
+**Keuntungan menggunakan `const`:**
+- **Efisiensi Memori**: Flutter akan menyimpan objek yang didefinisikan dengan `const` di memori hanya satu kali, sehingga mengurangi alokasi memori yang tidak diperlukan.
+- **Kinerja Lebih Cepat**: Penggunaan `const` mengurangi overhead penghitungan ulang objek pada saat rendering.
+- **Kode yang Lebih Jelas**: Menandakan bahwa widget atau nilai tersebut tidak akan pernah berubah.
+
+**Kapan menggunakan `const`:**
+`const` digunakan saat mendefinisikan widget atau objek yang bersifat statis, seperti teks, ikon, padding, dan warna yang tidak akan berubah.
+
+**Contoh penggunaan `const`**
+```
+const Padding(
+  padding: EdgeInsets.all(8.0),
+  child: Text(
+    'Welcome to Doughsy',
+    style: TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 18.0,
+    ),
+  ),
+);
+```
+
+### 2. Jelaskan dan bandingkan penggunaan `Column` dan `Row` pada Flutter. Berikan contoh implementasi dari masing-masing layout widget ini!
+
+**`Column`** dan **`Row`** adalah widget untuk menyusun elemen secara vertikal dan horizontal:
+
+- **`Column`** menyusun elemen secara vertikal (dari atas ke bawah).
+- **`Row`** menyusun elemen secara horizontal (dari kiri ke kanan).
+- Keduanya memiliki properti seperti `MainAxisAlignment` untuk mengatur posisi elemen di sepanjang sumbu utama dan `CrossAxisAlignment` untuk mengatur posisi elemen di sepanjang sumbu silang.
+
+**Contoh penggunaan `Column`:**
+```
+Column(
+  crossAxisAlignment: CrossAxisAlignment.center,
+  children: [
+    const Padding(
+      padding: EdgeInsets.only(top: 16.0),
+      child: Text(
+        'Welcome to Doughsy',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 18.0,
+        ),
+      ),
+    ),
+    GridView.count(
+      primary: true,
+      padding: const EdgeInsets.all(20),
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      crossAxisCount: 3,
+      shrinkWrap: true,
+      children: items.map((ItemHomepage item) {
+        return ItemCard(item); // Menggunakan ItemCard untuk setiap item
+      }).toList(),
+    ),
+  ],
+)
+```
+Penjelasan:
+`Column` ini menyusun elemen secara vertikal, termasuk teks sambutan dan `GridView` untuk menampilkan `ItemCard`.
+
+**Contoh penggunaan `Row`:**
+```
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  children: [
+    InfoCard(title: 'NPM', content: '2306240156'),
+    InfoCard(title: 'Name', content: 'Valiza Nadya Jatikansha'),
+    InfoCard(title: 'Class', content: 'PBP B'),
+  ],
+)
+```
+Penjelasan:
+`Row` ini digunakan untuk menampilkan tiga `InfoCard` secara horizontal dengan jarak yang merata antar elemen (`mainAxisAlignment: MainAxisAlignment.spaceEvenly`).
+
+### 3. Sebutkan apa saja elemen input yang kamu gunakan pada halaman form yang kamu buat pada tugas kali ini. Apakah terdapat elemen input Flutter lain yang tidak kamu gunakan pada tugas ini? Jelaskan!
+
+**Elemen input yang digunakan:**
+- **`TextFormField`**: Untuk input teks seperti nama produk, topping, deskripsi.
+- **`DropdownButtonFormField`**: Untuk memilih kategori dan ukuran produk.
+
+**Elemen input yang tidak digunakan:**
+- **`Checkbox`**: Untuk input pilihan boolean (tidak digunakan dalam form ini).
+- **`Radio`**: Untuk memilih satu dari beberapa pilihan (tidak digunakan).
+- **`Slider`**: Untuk memilih nilai dari rentang tertentu.
+- **`Switch`**: Untuk input on/off.
+- **`DatePicker` dan `TimePicker`**: Untuk memilih tanggal dan waktu.
+
+Pemilihan elemen input tergantung pada kebutuhan form dan data yang ingin dimasukkan pengguna.
+
+### 4. Bagaimana cara kamu mengatur tema (theme) dalam aplikasi Flutter agar aplikasi yang dibuat konsisten? Apakah kamu mengimplementasikan tema pada aplikasi yang kamu buat?
+
+Untuk menjaga konsistensi tema dalam aplikasi, saya menggunakan `ThemeData` di dalam `MaterialApp` pada root aplikasi. Ini memastikan warna utama, warna sekunder, dan elemen lainnya konsisten di seluruh aplikasi.
+
+**Contoh implementasi tema:**
+```
+MaterialApp(
+  title: 'Doughsy',
+  theme: ThemeData(
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      primary: Colors.blueGrey.shade800,
+      secondary: Colors.deepPurple.shade400,
+    ),
+  ),
+  home: MyHomePage(),
+)
+```
+
+### 5. Bagaimana cara kamu menangani navigasi dalam aplikasi dengan banyak halaman pada Flutter?
+
+Saya menggunakan widget `Navigator` dan `MaterialPageRoute` untuk menangani navigasi antar halaman. Berikut langkah-langkahnya:
+
+1. **Navigasi ke halaman baru menggunakan `Navigator.push()`:**
+**Method `push()`** digunakan untuk menambahkan sebuah route baru ke dalam stack yang dikelola oleh `Navigator`. Route yang ditambahkan akan berada di paling atas stack, sehingga halaman baru tersebut akan langsung ditampilkan kepada pengguna, sementara halaman sebelumnya tetap ada di bawahnya dalam stack.
+   ```
+   Navigator.push(
+     context,
+     MaterialPageRoute(builder: (context) => ProductEntryFormPage()),
+   );
+   ```
+Ketika tombol atau menu untuk menambah produk ditekan, aplikasi akan membuka halaman `ProductEntryFormPage` dan menempatkannya di atas stack.
+
+2. **Kembali ke halaman sebelumnya menggunakan `Navigator.pop()`:**
+**Method `pop()`** digunakan untuk menghapus atau menghilangkan halaman yang sedang aktif (paling atas) dari stack yang dikelola oleh `Navigator`. Hal ini menyebabkan pengguna kembali ke halaman sebelumnya yang ada di bawahnya dalam stack.
+   ```
+   Navigator.pop(context);
+   ```
+Jika pengguna menekan tombol back atau menyelesaikan input di sebuah form, halaman saat ini akan dihapus dari stack dan pengguna akan kembali ke halaman sebelumnya. 
+
+3. **Navigasi dengan menggantikan halaman saat ini menggunakan `Navigator.pushReplacement()`:**
+**Method `pushReplacement()`** menggantikan halaman yang sedang aktif dengan halaman baru tanpa menambahkan halaman lama ke dalam stack. Artinya, halaman lama akan dihapus dan digantikan oleh halaman baru, sehingga pengguna tidak dapat kembali ke halaman sebelumnya dengan menekan tombol back.
+   ```
+   Navigator.pushReplacement(
+     context,
+     MaterialPageRoute(builder: (context) => MyHomePage()),
+   );
+   ```
+Ketika pengguna menyelesaikan suatu proses (setelah menambahkan produk), halaman `MyHomePage` akan menggantikan halaman saat ini tanpa menyimpan halaman sebelumnya di stack.
