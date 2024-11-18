@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:doughsy_pbp/screens/menu.dart';
 import 'package:doughsy_pbp/screens/productentry_form.dart';
+import 'package:doughsy_pbp/screens/list_productentry.dart'; 
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -57,7 +58,20 @@ class LeftDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProductEntryFormPage(),
+                  builder: (context) => const ProductEntryFormPage(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.list_alt),
+            title: const Text('View Products'),
+            onTap: () {
+              // Route menu to the Product List page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductEntryPage(),
                 ),
               );
             },

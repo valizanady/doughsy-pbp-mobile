@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:doughsy_pbp/widgets/left_drawer.dart';
+import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'dart:convert';
+import 'package:doughsy_pbp/screens/menu.dart';
 
 class ProductEntryFormPage extends StatefulWidget {
   const ProductEntryFormPage({super.key});
@@ -23,11 +27,13 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(
           child: Text(
-            'Form Tambah Produk',
+            'Add New Donut Form',
           ),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -40,6 +46,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Form Fields for input
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -52,7 +59,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _itemName = value!;
+                      _itemName = value ?? "";
                     });
                   },
                   validator: (String? value) {
@@ -81,7 +88,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                   }).toList(),
                   onChanged: (String? value) {
                     setState(() {
-                      _category = value!;
+                      _category = value ?? "Donut";
                     });
                   },
                 ),
@@ -98,7 +105,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _topping = value!;
+                      _topping = value ?? "";
                     });
                   },
                   validator: (String? value) {
@@ -127,7 +134,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                   }).toList(),
                   onChanged: (String? value) {
                     setState(() {
-                      _size = value!;
+                      _size = value ?? "Small";
                     });
                   },
                 ),
@@ -144,7 +151,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _quantity = int.tryParse(value!) ?? 0;
+                      _quantity = int.tryParse(value ?? "") ?? 0;
                     });
                   },
                   validator: (String? value) {
@@ -170,7 +177,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _price = double.tryParse(value!) ?? 0.0;
+                      _price = double.tryParse(value ?? "") ?? 0.0;
                     });
                   },
                   validator: (String? value) {
@@ -196,7 +203,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                   ),
                   onChanged: (String? value) {
                     setState(() {
-                      _description = value!;
+                      _description = value ?? "";
                     });
                   },
                   validator: (String? value) {
@@ -207,48 +214,52 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                   },
                 ),
               ),
+              // Submit Button
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Theme.of(context).colorScheme.primary),
+                      backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primary),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Product successfully saved'),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Item Name: $_itemName'),
-                                    Text('Category: $_category'),
-                                    Text('Topping: $_topping'),
-                                    Text('Size: $_size'),
-                                    Text('Quantity: $_quantity'),
-                                    Text('Price: $_price'),
-                                    Text('Description: $_description'),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    _formKey.currentState!.reset();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
+                        // Send data to the server
+                        final response = await request.postJson(
+                          "http://localhost:8000/create-flutter/",
+                          jsonEncode(<String, dynamic>{
+                            'item_name': _itemName,
+                            'category': _category,
+                            'topping': _topping,
+                            'size': _size,
+                            'quantity': _quantity.toString(),
+                            'price': _price.toString(),
+                            'description': _description,
+                          }),
                         );
+
+                        if (context.mounted) {
+                          if (response['status'] == 'success') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Product successfully saved!"),
+                              ),
+                            );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyHomePage()),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    "There was an error, please try again."),
+                              ),
+                            );
+                          }
+                        }
                       }
                     },
                     child: const Text(
